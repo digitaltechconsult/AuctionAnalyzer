@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "debug": "registry:npm/debug#2.0.0+20160723033700",
+    "mongoose": "registry:npm/mongoose#4.3.5+20160628072220"
+  }
+}
