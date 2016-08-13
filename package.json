@@ -1,0 +1,23 @@
+{
+  "name": "auctionanalyzer",
+  "version": "1.0.0",
+  "description": "WoW AH",
+  "main": "./App/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eraser2021999/AuctionAnalyzer.git"
+  },
+  "author": "BC",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eraser2021999/AuctionAnalyzer/issues"
+  },
+  "homepage": "https://github.com/eraser2021999/AuctionAnalyzer#readme",
+  "dependencies": {
+    "mongodb": "^2.2.5",
+    "mongoose": "^4.5.8"
+  }
+}
