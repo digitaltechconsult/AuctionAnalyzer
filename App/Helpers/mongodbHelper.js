@@ -41,11 +41,18 @@ MongoDBHelper.prototype.insert = function(ahData) {
     });
 }
 
-MongoDBHelper.prototype.select = function() {
+MongoDBHelper.prototype.select = function(endQuery) {
     var $this = this;
 
     var collection = this.dbCon.collection($this.catalogName);
-    var cursor = collection.find('owner':'Amronogo');
+    var cursor = collection.find();
+    cursor.each(function(err,row){
+        if (row !== null) {
+            console.dir(row);
+        } else {
+            endQuery();
+        }
+    });
 }
 
 
