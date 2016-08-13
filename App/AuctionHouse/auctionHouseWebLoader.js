@@ -8,11 +8,11 @@ function AuctionHouseWebLoader() {
 
 //class method - get ah json file data
 AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
-    var main = this;
-
+    var $this = this;
+    
     function success(data) {
         var object = JSON.parse(data);
-        main.ahData.files = object.files
+        $this.ahData.files = object.files
         onsuccess();
     }
 
@@ -24,12 +24,13 @@ AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
 //read ah data files
 //TODO: put them in a database
 AuctionHouseWebLoader.prototype.readAuctionHouseFiles = function (onsuccess) {
-    var main = this;
-    this.ahData.files.forEach(function (file) {
+    var $this = this;
+
+    $this.ahData.files.forEach(function (file) {
 
         function success(data) {
-            main.ahData.data = JSON.parse(data);
-            onsuccess(main.ahData);
+            $this.ahData.data = JSON.parse(data);
+            onsuccess();
         }
 
         function error() { }

@@ -1,41 +1,51 @@
-const mongoose = require('mongoose');
+const mongoClient = require('mongodb').MongoClient;
 
 function MongoDBHelper() {
+    this.catalogName = 'auctions';
     this.serverURL = 'mongodb://localhost:27017/AuctionHouse';
     this.dbCon = null;
 }
 
 MongoDBHelper.prototype.connect = function(ready) {
-    var main = this;
-
-    mongoose.connect(this.serverURL, function(error, db) {
-        if (error !== 'undefined' && db !== 'undefined') {
-            main.dbCon = db;
-            if (main.dbCon !== null) {
-                ready();
-            }
+    var $this = this;
+    
+    mongoClient.connect($this.serverURL, function(error, database) {
+        if(error === null && database !== null ) {
+            $this.dbCon = database;
+            ready();
         } else {
-            console.error("Error occured: " + error);
+            console.error("There is an error connecting to MongoDB: " + error)
         }
     });
 }
 
 MongoDBHelper.prototype.disconnect = function() {
-    if (this.dbCon !== null) {
-        this.dbCon.close();
-        this.dbCon = null;
+    var $this = this;
+
+    if ($this.dbCon !== null) {
+        $this.dbCon.close();
+        $this.dbCon = null;
     }
 }
 
 MongoDBHelper.prototype.insert = function(ahData) {
-    var collection = this.dbCon.collection('documents');
+    var $this = this;
+
+    var collection = this.dbCon.collection($this.catalogName);
     collection.insert(ahData, function(error,result){
         if (error !== null) {
             console.error("Error inserting data: " + error);
         } else {
-            console.log("Added data file with " + ahData.file.length + " records.");
+            console.log("Added data file with " + ahData.files.length + " records.");
         }
     });
+}
+
+MongoDBHelper.prototype.select = function() {
+    var $this = this;
+
+    var collection = this.dbCon.collection($this.catalogName);
+    var cursor = collection.find('owner':'Amronogo');
 }
 
 

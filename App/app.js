@@ -5,6 +5,7 @@ var mongodb = new MongoDBHelper();
 var ahwl = new AuctionHouseWebLoader();
 
 
+//insert
 mongodb.connect(function() {
     ahwl.getAuctionHouseFile(function(){
         ahwl.readAuctionHouseFiles(function() {
@@ -13,3 +14,5 @@ mongodb.connect(function() {
         });
     });
 });
+
+//retrieve
