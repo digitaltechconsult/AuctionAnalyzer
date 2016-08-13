@@ -1,8 +1,15 @@
-const AuctionHouseWebLoader = require('./AuctionHouse/auctionHouseWebLoader');
+const MongoDBHelper = require('./Helpers/mongoDBHelper');
+const AuctionHouseWebLoader = require('./AuctionHouse/AuctionHouseWebLoader');
 
+var mongodb = new MongoDBHelper();
 var ahwl = new AuctionHouseWebLoader();
-ahwl.getAuctionHouseFile(function() {
-    ahwl.readAuctionHouseFiles(function(ahData) {
-        console.log("ahData ready");
+
+
+mongodb.connect(function() {
+    ahwl.getAuctionHouseFile(function(){
+        ahwl.readAuctionHouseFiles(function() {
+            mongodb.insert(ahwl.ahData);
+            mongodb.disconnect();
+        });
     });
 });

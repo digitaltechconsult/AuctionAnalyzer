@@ -19,13 +19,13 @@ function get(url, onsuccess, onerror, secure = true) {
 
         response.on('data', function (chunk) {
             responseString += chunk.toString('utf8'); //append the chunks of the response
-            console.log("Transffered " + responseString.length + " of " + contentLength);
+            //console.log("Transffered " + responseString.length + " of " + contentLength);
         }).on('error', function (error) {
             console.error("Error occured: " + error)
             onerror(error); //pass the error to caller function
         }).on('end', function () {
             onsuccess(responseString); //operation ended, return the final result
-            console.log("Request done!");
+            console.log("Request complete");
         });
     });
 }
