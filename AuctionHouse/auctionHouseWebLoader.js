@@ -29,7 +29,7 @@ AuctionHouseWebLoader.prototype.readAuctionHouseFiles = function (onsuccess) {
 
         function success(data) {
             main.ahData.data = JSON.parse(data);
-            console.log(JSON.stringify(main.ahData));
+            onsuccess(main.ahData);
         }
 
         function error() { }
