@@ -11,6 +11,7 @@ AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
     var $this = this;
     
     function success(data) {
+        //console.log("auctionHouseLoader.js: ");
         var object = JSON.parse(data);
         $this.ahData.files = object.files
         onsuccess();
@@ -27,9 +28,11 @@ AuctionHouseWebLoader.prototype.readAuctionHouseFiles = function (onsuccess) {
     var $this = this;
 
     $this.ahData.files.forEach(function (file) {
-
+        
         function success(data) {
             $this.ahData.data = JSON.parse(data);
+            $this.ahData.data.timestamp = file.lastModified;
+
             onsuccess();
         }
 

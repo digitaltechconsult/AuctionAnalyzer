@@ -18,6 +18,7 @@
   "homepage": "https://github.com/eraser2021999/AuctionAnalyzer#readme",
   "dependencies": {
     "mongodb": "^2.2.5",
-    "mongoose": "^4.5.8"
+    "mongoose": "^4.5.8",
+    "single-line-log": "^1.1.1"
   }
 }

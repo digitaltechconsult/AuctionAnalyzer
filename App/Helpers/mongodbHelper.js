@@ -14,7 +14,7 @@ MongoDBHelper.prototype.connect = function(ready) {
             $this.dbCon = database;
             ready();
         } else {
-            console.error("There is an error connecting to MongoDB: " + error)
+            console.error("mongodbHelper.js: There is an error connecting to MongoDB: " + error)
         }
     });
 }
@@ -28,15 +28,16 @@ MongoDBHelper.prototype.disconnect = function() {
     }
 }
 
-MongoDBHelper.prototype.insert = function(ahData) {
+MongoDBHelper.prototype.insert = function(data, callback) {
     var $this = this;
 
     var collection = this.dbCon.collection($this.catalogName);
-    collection.insert(ahData, function(error,result){
+    collection.insert(data, function(error, result){
         if (error !== null) {
-            console.error("Error inserting data: " + error);
+            console.error("mongodbHelper.js: Error inserting data: " + error);
         } else {
-            console.log("Added data file with " + ahData.files.length + " records.");
+            console.log("mongodbHelper.js: Added data file with " + data.length + " records.");
+            callback();
         }
     });
 }
