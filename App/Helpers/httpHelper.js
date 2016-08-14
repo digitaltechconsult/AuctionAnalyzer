@@ -6,6 +6,7 @@ function get(url, onsuccess, onerror, secure = true) {
     //if secure parameter is true, then use https
     if (url === null || url === 'undefined') return false;
     var httpHandler = secure ? https : http;
+    console.log("httpHelper.js: SSL = " + secure);
 
     httpHandler.get(url, function (response) {
         //tha accumulator string used to save the response
@@ -20,15 +21,14 @@ function get(url, onsuccess, onerror, secure = true) {
 
         response.on('data', function (chunk) {
             responseString += chunk.toString('utf8'); //append the chunks of the response
-            //console.log("Transffered " + responseString.length + " of " + contentLength);
             var downloadProgress = "httpHelper.js: Download progress: " + Math.round(100 * responseString.length/contentLength) + "%\n";
             log(downloadProgress);
-        }).on('error', function (error) {
-            console.error("httpHelper.js: Error occured: " + error)
+        }).on('error', function (e) {
+            console.error("httpHelper.js: get() error - : " + e)
             onerror(error); //pass the error to caller function
         }).on('end', function () {
             onsuccess(responseString); //operation ended, return the final result
-            console.log("httpHelper.js: Download complete.");
+            console.log("httpHelper.js: Download complete (%s).", url);
         });
     });
 }

@@ -19,6 +19,7 @@
   "dependencies": {
     "mongodb": "^2.2.5",
     "mongoose": "^4.5.8",
-    "single-line-log": "^1.1.1"
+    "single-line-log": "^1.1.1",
+    "sleep": "^3.0.1"
   }
 }

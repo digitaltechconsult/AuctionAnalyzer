@@ -18,10 +18,12 @@ function Auction() {
 
 function Auctions() {
     this.collection = [];
+    console.log("auctions.js: New Auctions object created");
 }
 
 Auctions.prototype.readBlizzardData = function (data) {
     var $this = this;
+    console.log("auctions.js: Reading Blizzard data");
 
     var realms = data.data.realms;
     var auctions = data.data.auctions;
