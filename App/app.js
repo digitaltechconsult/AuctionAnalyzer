@@ -18,13 +18,21 @@ function _main() {
                 auctions.readBlizzardData(ahwl.ahData);
                 mongodb.insert(auctions.collection, function () {
                     mongodb.disconnect();
+                    recursiveCall();
                 });
             }, function (e) {
                 console.log("app.js: No data updated.");
                 mongodb.disconnect();
+                recursiveCall();
             });
         });
     });
+}
+
+function recursiveCall() {
+    sleep.sleep(1800); //call the update twice an hour
+    console.log("\n");
+    _main();
 }
 
 console.log("WoW Auction House Data Loader v.0.1");
