@@ -45,13 +45,19 @@ MongoDBHelper.prototype.insert = function(data, callback) {
 MongoDBHelper.prototype.getLastTimestamp = function(callback) {
     var $this = this;
 
+    var lastTimestamp = 0;
     var collection = $this.dbCon.collection($this.catalogName);
-    var cursor = collection.distinct('timestamp');
-    var lastTimestamp = cursor[cursor.length - 1];
-    
-    console.log("mongodbHelper.js: Last timestamp found in the database is: " + lastTimestamp);
-    callback();
-    return lastTimestamp;
+    var cursor = collection.distinct('timestamp', function(err, results){
+        if(err !== null) {
+            console.error("mongodbHelper.js: Error occured while getting the timestamp: " + err);
+        } else {
+        results.forEach(function(result){
+            lastTimestamp = result > lastTimestamp ? result : lastTimestamp;   
+        });
+        }
+        console.log("mongodbHelper.js: Last timestamp found in the database is: " + lastTimestamp);
+        callback(lastTimestamp);
+    });
 }
 
 MongoDBHelper.prototype.select = function(endQuery) {

@@ -38,15 +38,18 @@ AuctionHouseWebLoader.prototype.readAuctionHouseFiles = function (callback) {
         function error() { }
 
         var mongodb = new mongodbHelper();
+        var lastTimestamp = 0;
         mongodb.connect(function () {
             //get last inserted timestamp
-            var lastTimestamp = mongodb.getLastTimestamp(function () {
+            mongodb.getLastTimestamp(function (timestamp) {
+                lastTimestamp = timestamp;
                 mongodb.disconnect();
+                //if file timestamp is greater than db timestamp
+                if (file.lastModified > lastTimestamp || lastTimestamp !== null) {
+                    console.log("auctionHouseWebLoader.js: file timestamp is newer than database");
+                    http.get(file.url, success, error, false);
+                }
             });
-            //if file timestamp is greater than db timestamp
-            if (file.lastModified > lastTimestamp) {
-                http.get(file.url, success, error, false);
-            }
         });
     });
 }
