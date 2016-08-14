@@ -42,6 +42,18 @@ MongoDBHelper.prototype.insert = function(data, callback) {
     });
 }
 
+MongoDBHelper.prototype.getLastTimestamp = function(callback) {
+    var $this = this;
+
+    var collection = $this.dbCon.collection($this.catalogName);
+    var cursor = collection.distinct('timestamp');
+    var lastTimestamp = cursor[cursor.length - 1];
+    
+    console.log("mongodbHelper.js: Last timestamp found in the database is: " + lastTimestamp);
+    callback();
+    return lastTimestamp;
+}
+
 MongoDBHelper.prototype.select = function(endQuery) {
     var $this = this;
 

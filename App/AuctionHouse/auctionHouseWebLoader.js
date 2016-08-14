@@ -1,5 +1,6 @@
 const settings = require('./settings');
 const http = require('../Helpers/httpHelper');
+const mongodbHelper = require('../Helpers/mongodbHelper');
 
 //class constructor
 function AuctionHouseWebLoader() {
@@ -9,10 +10,11 @@ function AuctionHouseWebLoader() {
 //class method - get ah json file data
 AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
     var $this = this;
-    
+
     function success(data) {
         //console.log("auctionHouseLoader.js: ");
         var object = JSON.parse(data);
+
         $this.ahData.files = object.files
         onsuccess();
     }
@@ -22,23 +24,30 @@ AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
     http.get(settings.apiURL, success, error, true);
 }
 
-//read ah data files
-//TODO: put them in a database
-AuctionHouseWebLoader.prototype.readAuctionHouseFiles = function (onsuccess) {
+AuctionHouseWebLoader.prototype.readAuctionHouseFiles = function (callback) {
     var $this = this;
 
     $this.ahData.files.forEach(function (file) {
-        
+
         function success(data) {
             $this.ahData.data = JSON.parse(data);
             $this.ahData.data.timestamp = file.lastModified;
-
-            onsuccess();
+            callback();
         }
 
         function error() { }
 
-        http.get(file.url, success, error, false);
+        var mongodb = new mongodbHelper();
+        mongodb.connect(function () {
+            //get last inserted timestamp
+            var lastTimestamp = mongodb.getLastTimestamp(function () {
+                mongodb.disconnect();
+            });
+            //if file timestamp is greater than db timestamp
+            if (file.lastModified > lastTimestamp) {
+                http.get(file.url, success, error, false);
+            }
+        });
     });
 }
 
