@@ -65,5 +65,9 @@ MongoDBHelper.prototype.getLastTimestamp = function (callback) {
     });
 }
 
+MongoDBHelper.prototype.getCollection = function(collectionName) {
+    return this.dbCon.collection(collectionName);
+}
+
 
 module.exports = MongoDBHelper;

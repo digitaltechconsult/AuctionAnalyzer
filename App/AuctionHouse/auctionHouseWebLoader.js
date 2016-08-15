@@ -9,7 +9,7 @@ function AuctionHouseWebLoader() {
 }
 
 //class method - get ah json file data
-AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
+AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess, onerror) {
     var $this = this;
 
     function success(data) {
@@ -22,6 +22,7 @@ AuctionHouseWebLoader.prototype.getAuctionHouseFile = function (onsuccess) {
 
     function error(e) { 
         console.error("auctionHouseWebLoader.js: getAuctionHouseFile() error - " + e);
+        onerror(e);
     }
 
     http.get(settings.apiURL, success, error, true);

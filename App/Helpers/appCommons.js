@@ -1,6 +1,8 @@
 const sleep = require('sleep');
 
-function AppCommons() {}
+function AppCommons() {
+    this.sleepTime = 1800;
+}
 
 AppCommons.prototype.getDateTime = function() {
     var date = new Date();
@@ -26,8 +28,8 @@ AppCommons.prototype.getDateTime = function() {
 }
 
 AppCommons.prototype.recursiveCall = function(time, callback) {
-    sleep.sleep(time); //call the update twice an hour
-    console.log("\n");
+    console.log("appCommons.js: Program will be continued after %d seconds\n", time);
+    sleep.sleep(time);
     callback();
 }
 
