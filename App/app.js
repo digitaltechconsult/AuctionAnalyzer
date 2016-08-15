@@ -19,18 +19,26 @@ function _main() {
                 auctions.readBlizzardData(ahwl.ahData);
                 mongodb.insert(auctions.collection, function () {
                     mongodb.disconnect();
-                    appCommons.recursiveCall(1800, _main);
+                    appCommons.recursiveCall(appCommons.sleepTime, _main);
                 });
             }, function (e) {
-                console.log("app.js: No data updated.");
                 mongodb.disconnect();
-                appCommons.recursiveCall(1800, _main);
+                _errorHandler(e);
             });
+        }, function(e) {
+            mongodb.disconnect();
+            _errorHandler(e);
         });
     }, 
-    function() {
-        appCommons.recursiveCall(1800, _main);
+    function(e) {
+        mongodb.disconnect();
+        _errorHandler(e);
     });
+}
+
+function _errorHandler(e) {
+    console.error("app.js: Application terminated with error: " + e);
+    appCommons.recursiveCall(appCommons.sleepTime, _main);
 }
 
 console.log("WoW Auction House Data Loader v.0.1");

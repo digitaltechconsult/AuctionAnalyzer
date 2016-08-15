@@ -14,6 +14,12 @@ function get(url, onsuccess, onerror, secure = true) {
         var contentLength = -1;
 
         console.log("httpHelper.js: Status code: " + response.statusCode + " for url: " + url);
+        //if status is not success raise error and exit
+        if(response.statusCode != 200) {
+            onerror(response.statusCode + " " + response.statusMessage);
+            return;
+        }
+        
         if (response.headers['content-length'] !== 'undefined' || response.headers['content-length'] !== null) {
             contentLength = response.headers['content-length'];
             console.log("httpHelper.js: Total transfer size: " + contentLength);
