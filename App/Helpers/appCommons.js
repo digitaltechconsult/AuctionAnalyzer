@@ -1,3 +1,5 @@
+const sleep = require('sleep');
+
 function AppCommons() {}
 
 AppCommons.prototype.getDateTime = function() {
@@ -20,7 +22,13 @@ AppCommons.prototype.getDateTime = function() {
     var day  = date.getDate();
     day = (day < 10 ? "0" : "") + day;
 
-    return year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
+    return year + ":" + month + ":" + day + " " + hour + ":" + min + ":" + sec;
+}
+
+AppCommons.prototype.recursiveCall = function(time, callback) {
+    sleep.sleep(time); //call the update twice an hour
+    console.log("\n");
+    callback();
 }
 
 module.exports = AppCommons;

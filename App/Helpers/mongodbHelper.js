@@ -1,13 +1,14 @@
 const mongoClient = require('mongodb').MongoClient;
+const appSettings = require('../AuctionHouse/settings');
 
 function MongoDBHelper() {
-    this.catalogName = 'auctions';
+    this.catalogName = 'auctions_' + appSettings.realm;
     this.serverURL = 'mongodb://localhost:27017/AuctionHouse';
     this.dbCon = null;
-    console.log("mongodbHelper.js: New MongoDBHelper object created");
+    console.log("mongodbHelper.js: New MongoDBHelper object created.");
 }
 
-MongoDBHelper.prototype.connect = function (ready) {
+MongoDBHelper.prototype.connect = function (ready, callbackError) {
     var $this = this;
 
     mongoClient.connect($this.serverURL, function (error, database) {
@@ -17,6 +18,7 @@ MongoDBHelper.prototype.connect = function (ready) {
             ready();
         } else {
             console.error("mongodbHelper.js: connect() - " + error);
+            callbackError();
         }
     });
 }
