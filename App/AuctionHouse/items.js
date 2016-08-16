@@ -2,6 +2,7 @@ const http = require('../Helpers/httpHelper.js');
 const settings = require('./settings');
 const MongoDBHelper = require('../Helpers/mongoDBHelper');
 const log = require('single-line-log').stdout;
+const _ = require('underscore');
 
 function ItemLibrary() {
     this.collectionName = 'item_library';
@@ -9,56 +10,38 @@ function ItemLibrary() {
     this.ahItems = [];
 }
 
-ItemLibrary.prototype.updateLibrary = function() {
+ItemLibrary.prototype.loadItems = function (collectionName) {
     var $this = this;
 
-    var mongodb = new MongoDBHelper();
-    mongodb.connect(function(){
-        var itemsCollection = mongodb.getCollection($this.collectionName);
-        var ahItemsCollection = mongodb.getCollection("auctions_" + settings.realm);
+    return new Promise(function (fulfill, reject) {
+        var mongodb = new MongoDBHelper();
+        mongodb.connect(function () {
+            console.log("items.js: Preparing to load items from collection " + collectionName);
+            var collection = mongodb.getCollection(collectionName);
+            var column = collectionName === $this.collectionName ? 'id' : 'item';
 
-        //retrieve current items
-        itemsCollection.distinct('item', function(error, results) {
-            if(error !== null) {
-                console.error("items.js: updateLibrary() - " + error);
-                mongodb.disconnect();
-            } else {
-               $this.items = results;
-               
-               //retrieve AH items
-               ahItemsCollection.distinct('item', function(error, results) {
-                   if(error !== null) {
-                       console.error("items.js: updateLibrary() - " + error);
-                   } else {
-                       $this.ahItems = results;
-
-                       //TODO: execute item data retrieval
-                       if ($this.items !== null && $this.ahItems !== null) {
-                           var itemsToUpdate = getItemsToUpdate($this.items, $this.ahItems);
-                           
-                       }
-                   }
-                   mongodb.disconnect();
-               });
-            }
+            collection.distinct(column, function (error, results) {
+                if (error !== null) {
+                    console.error("items.js: loadItems() - " + error);
+                    reject(error);
+                    mongodb.disconnect();
+                } else {
+                    if (collectionName === $this.collectionName) {
+                        $this.items = results;
+                    } else {
+                        $this.ahItems = results;
+                    }
+                    console.log("items.js: Found %d items in collection %s", results.length, collectionName);
+                    mongodb.disconnect();
+                    fulfill(results);
+                }
+            });
         });
-    },
-
-    function() { //error 
     });
-}
-
-function getItemsToUpdate(items, ahItems) {
-    var $this = this;
-    
-    var itemsToUpdate = ahItems.diff(items);
-    return itemsToUpdate !== null ? getItemsToUpdate : [];
 }
 
 module.exports = ItemLibrary;
 
 var il = new ItemLibrary();
-il.updateLibrary();
-
 
 
