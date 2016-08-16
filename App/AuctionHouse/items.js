@@ -6,8 +6,10 @@ const _ = require('underscore');
 
 function ItemLibrary() {
     this.collectionName = 'item_library';
-    this.items = [];
+    this.collectionRealm = 'auctions_' + settings.realm;
     this.ahItems = [];
+    this.items = [];
+    this.remaingItems = [];
 }
 
 ItemLibrary.prototype.loadItems = function (collectionName) {
@@ -33,15 +35,65 @@ ItemLibrary.prototype.loadItems = function (collectionName) {
                     }
                     console.log("items.js: Found %d items in collection %s", results.length, collectionName);
                     mongodb.disconnect();
-                    fulfill(results);
+                    fulfill();
                 }
             });
         });
     });
 }
 
+ItemLibrary.prototype.getItemList = function () {
+    var $this = this;
+
+    return new Promise(function (fulfill, reject) {
+        var itemPromise = $this.loadItems($this.collectionName);
+        var ahItemPromise = $this.loadItems($this.collectionRealm);
+
+        itemPromise.then(ahItemPromise.then(function () {
+            $this.remaingItems = _($this.ahItems).difference($this.items);
+            if ($this.remaingItems.length > 0) {
+                console.log("items.js: Remaining %d items to download from Blizzard.", $this.remaingItems.length);
+                fulfill();
+            } else {
+                console.log("items.js: 0 items to update.");
+                reject();
+            }
+        }));
+    });
+}
+
+ItemLibrary.prototype.updateItemList = function () {
+    var $this = this;
+
+    $this.getItemList().then(function () {
+        
+            $this.remaingItems.forEach(function (item) {
+                var url = settings.itemApiUrl(item);
+
+                function success(data) {
+                    mongodb.connect(function () {
+                        var itemData = JSON.parse(data);
+                        var collection = mongodb.getCollection($this.collectionName);
+                        //mongodb.insert(collection)
+                    });
+                }
+
+                function error(e) {
+                    console.error("items.js: updateItemList() - " + e);
+                }
+
+                http.get(url, success, error, true);
+            });
+    },
+        function () {
+            console.log("items.js: There is no need to update items database");
+        })
+
+}
+
 module.exports = ItemLibrary;
 
 var il = new ItemLibrary();
+il.getItemList();
 
 
