@@ -5,6 +5,8 @@ const log = require('single-line-log').stdout;
 
 function ItemLibrary() {
     this.collectionName = 'item_library';
+    this.items = [];
+    this.ahItems = [];
 }
 
 ItemLibrary.prototype.updateLibrary = function() {
@@ -12,13 +14,31 @@ ItemLibrary.prototype.updateLibrary = function() {
 
     var mongodb = new MongoDBHelper();
     mongodb.connect(function(){
-        var itemCollection = mongodb.getCollection($this.collectionName);
-        itemCollection.find().count(function(error, result){
-            console.log(result);
-            mongodb.disconnect();
+        var itemsCollection = mongodb.getCollection($this.collectionName);
+        var ahItemsCollection = mongodb.getCollection("auctions_" + settings.realm);
+
+        //retrieve current items
+        itemsCollection.distinct('item', function(error, results) {
+            if(error !== null) {
+                console.error("items.js: updateLibrary() - " + error);
+                mongodb.disconnect();
+            } else {
+               $this.items = results;
+               
+               //retrieve AH items
+               ahItemsCollection.distinct('item', function(error, results) {
+                   if(error !== null) {
+                       console.error("items.js: updateLibrary() - " + error);
+                       mongodb.disconnect();
+                   } else {
+                       $this.ahItems = results;
+                       mongodb.disconnect();
+                   }
+               });
+            }
         });
-        mongodb.disconnect();
     },
+
     function() { //error 
     });
 
