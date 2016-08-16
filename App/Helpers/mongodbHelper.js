@@ -33,15 +33,28 @@ MongoDBHelper.prototype.disconnect = function () {
     }
 }
 
-MongoDBHelper.prototype.insert = function (data, callback) {
+MongoDBHelper.prototype.insertAHDump = function (data, callback) {
     var $this = this;
 
     var collection = this.dbCon.collection($this.catalogName);
     collection.insert(data, function (error, result) {
         if (error !== null) {
-            console.error("mongodbHelper.js: insert() -  " + error);
+            console.error("mongodbHelper.js: insertAHDump() -  " + error);
         } else {
             console.log("mongodbHelper.js: Added data file with " + data.length + " records.");
+            callback();
+        }
+    });
+}
+
+MongoDBHelper.prototype.insert = function(collection, data, callback) {
+    var $this = this;
+
+    collection.insert(data, function(error, result){
+        if (error !== null) {
+            console.error("mongodbHelper.js: insert() - " + error);
+        } else {
+            console.log("mongodbHelper.js: Row inserted into database");
             callback();
         }
     });

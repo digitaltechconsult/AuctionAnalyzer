@@ -1,19 +1,21 @@
 const http = require('http');
 const https = require('https');
 const log = require('single-line-log').stdout;
+const sleep = require('sleep');
 
 function get(url, onsuccess, onerror, secure = true) {
+    
     //if secure parameter is true, then use https
     if (url === null || url === 'undefined') return false;
     var httpHandler = secure ? https : http;
-    console.log("httpHelper.js: SSL = " + secure);
+    //console.log("httpHelper.js: SSL = " + secure);
 
     httpHandler.get(url, function (response) {
-        //tha accumulator string used to save the response
+        //the accumulator string used to save the response
         var responseString = '';
         var contentLength = -1;
 
-        console.log("httpHelper.js: Status code: " + response.statusCode + " for url: " + url);
+        //console.log("httpHelper.js: Status code: " + response.statusCode + " for url: " + url);
         //if status is not success raise error and exit
         if(response.statusCode != 200) {
             onerror(response.statusCode + " " + response.statusMessage);

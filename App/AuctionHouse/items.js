@@ -3,9 +3,10 @@ const settings = require('./settings');
 const MongoDBHelper = require('../Helpers/mongoDBHelper');
 const log = require('single-line-log').stdout;
 const _ = require('underscore');
+const sleep = require('sleep');
 
-function ItemLibrary() {
-    this.collectionName = 'item_library';
+function ItemLibrary(type) {
+    this.collectionName = type === 'items' ? 'item_library' : 'user_library';
     this.collectionRealm = 'auctions_' + settings.realm;
     this.ahItems = [];
     this.items = [];
@@ -62,38 +63,71 @@ ItemLibrary.prototype.getItemList = function () {
     });
 }
 
+ItemLibrary.prototype.updateItem = function (item) {
+    var $this = this;
+    return new Promise(function (fulfill, reject) {
+
+        console.log("items.js: Preparing to update item " + item);
+        var url = settings.itemApiUrl(item);
+
+        function success(data) {
+            console.log("items.js: Data retrieved, preparing to save it in database");
+            var mongodb = new MongoDBHelper();
+            mongodb.connect(function () {
+                var itemData = JSON.parse(data);
+                var collection = mongodb.getCollection($this.collectionName);
+                mongodb.insert(collection, itemData, function () {
+                    console.log("items.js: Row with id %d inserted into database", itemData.id);
+                    mongodb.disconnect();
+                    fulfill();
+                });
+            });
+        }
+
+        function error(e) {
+            console.error("items.js: updateItemList() - " + e);
+            reject(e);
+        }
+
+        console.log("items.js: Requesting url: " + url);
+        http.get(url, success, error, true);
+    });
+}
+
 ItemLibrary.prototype.updateItemList = function () {
     var $this = this;
 
+    var promises = [];
     $this.getItemList().then(function () {
         
-            $this.remaingItems.forEach(function (item) {
-                var url = settings.itemApiUrl(item);
+        if ($this.remaingItems.length === 0) {
+            return;
+        }
 
-                function success(data) {
-                    mongodb.connect(function () {
-                        var itemData = JSON.parse(data);
-                        var collection = mongodb.getCollection($this.collectionName);
-                        //mongodb.insert(collection)
-                    });
-                }
+        var size = $this.remaingItems.length < 50 ? $this.remaingItems.length : 50;
+        for (j = 0; j < size; j++) {
+            var item = $this.remaingItems[j];
+            promises.push($this.updateItem(item));
+        }
 
-                function error(e) {
-                    console.error("items.js: updateItemList() - " + e);
-                }
-
-                http.get(url, success, error, true);
-            });
+        Promise.all(promises).then(function () {
+        console.log("items.js: %d items have been updated", size);
+        
+        //recursive call, hope there is an error to exit loop
+        $this.updateItemList();
+        }).catch(function (e) {
+            console.error("items.js: Promise.all.updateItemList() - " + e);
+        });
     },
-        function () {
-            console.log("items.js: There is no need to update items database");
-        })
-
+        function (e) {
+            console.error("items.js: updateItemList() - " + e);
+        }
+    );
 }
 
 module.exports = ItemLibrary;
 
-var il = new ItemLibrary();
-il.getItemList();
+var il = new ItemLibrary('items');
+il.updateItemList();
 
 

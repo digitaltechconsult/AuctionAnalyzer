@@ -17,7 +17,7 @@ function _main() {
             ahwl.readAuctionHouseFiles(function () {
                 var auctions = new Auctions();
                 auctions.readBlizzardData(ahwl.ahData);
-                mongodb.insert(auctions.collection, function () {
+                mongodb.insertAHDump(auctions.collection, function () {
                     mongodb.disconnect();
                     appCommons.recursiveCall(appCommons.sleepTime, _main);
                 });
