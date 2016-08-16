@@ -37,8 +37,10 @@ function _main() {
 }
 
 function _errorHandler(e) {
-    console.error("app.js: Application terminated with error: " + e);
-    appCommons.recursiveCall(appCommons.sleepTime, _main);
+    if(e!== null) {
+        console.error("app.js: Application terminated with error: " + e);
+        appCommons.recursiveCall(appCommons.sleepTime, _main);
+    }
 }
 
 console.log("WoW Auction House Data Loader v.0.1");
