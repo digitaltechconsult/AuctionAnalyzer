@@ -29,11 +29,16 @@ ItemLibrary.prototype.updateLibrary = function() {
                ahItemsCollection.distinct('item', function(error, results) {
                    if(error !== null) {
                        console.error("items.js: updateLibrary() - " + error);
-                       mongodb.disconnect();
                    } else {
                        $this.ahItems = results;
-                       mongodb.disconnect();
+
+                       //TODO: execute item data retrieval
+                       if ($this.items !== null && $this.ahItems !== null) {
+                           var itemsToUpdate = getItemsToUpdate($this.items, $this.ahItems);
+                           
+                       }
                    }
+                   mongodb.disconnect();
                });
             }
         });
@@ -41,7 +46,13 @@ ItemLibrary.prototype.updateLibrary = function() {
 
     function() { //error 
     });
+}
 
+function getItemsToUpdate(items, ahItems) {
+    var $this = this;
+    
+    var itemsToUpdate = ahItems.diff(items);
+    return itemsToUpdate !== null ? getItemsToUpdate : [];
 }
 
 module.exports = ItemLibrary;
