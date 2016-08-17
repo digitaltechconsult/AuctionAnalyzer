@@ -85,8 +85,22 @@ ItemLibrary.prototype.updateItem = function (item) {
         }
 
         function error(e) {
-            console.error("items.js: updateItemList() - " + e);
-            reject(e);
+            if (e.message === '404') {
+                console.error("items.js: Item not found, skipping");
+                var mongodb = new MongoDBHelper();
+                mongodb.connect(function () {
+                    var itemData = { id: item, status: -1 };
+                    var collection = mongodb.getCollection($this.collectionName);
+                    mongodb.insert(collection, itemData, function () {
+                        console.log("items.js: Row with id %d inserted into database but it has no relevant information", itemData.id);
+                        mongodb.disconnect();
+                        fulfill();
+                    });
+                });
+            } else {
+                console.error("items.js: updateItem() - " + e);
+                reject(e);
+            }
         }
 
         console.log("items.js: Requesting url: " + url);
@@ -94,40 +108,45 @@ ItemLibrary.prototype.updateItem = function (item) {
     });
 }
 
-ItemLibrary.prototype.updateItemList = function () {
+ItemLibrary.prototype.updateItemList = function (exitCallback) {
     var $this = this;
 
     var promises = [];
     $this.getItemList().then(function () {
-        
+
         if ($this.remaingItems.length === 0) {
+            console.log("items.js: Nothing to update, %d items left", $this.remaingItems.length);
+            exitCallback();
             return;
         }
 
-        var size = $this.remaingItems.length < 50 ? $this.remaingItems.length : 50;
+        var size = $this.remaingItems.length < 75 ? $this.remaingItems.length : 75;
         for (j = 0; j < size; j++) {
             var item = $this.remaingItems[j];
             promises.push($this.updateItem(item));
         }
 
         Promise.all(promises).then(function () {
-        console.log("items.js: %d items have been updated", size);
-        
-        //recursive call, hope there is an error to exit loop
-        $this.updateItemList();
+            console.log("items.js: %d items have been updated", size);
+
+            //recursive call, hope there is an error to exit loop
+            $this.updateItemList();
         }).catch(function (e) {
-            console.error("items.js: Promise.all.updateItemList() - " + e);
+            if ( e!== null) {
+                console.error("items.js: Promise.all.updateItemList() - " + e);
+                exitCallback();
+            }
         });
     },
         function (e) {
-            console.error("items.js: updateItemList() - " + e);
+            if (e !== null) {
+                console.error("items.js: updateItemList() - " + e);
+                exitCallback();
+            }
         }
     );
 }
 
 module.exports = ItemLibrary;
-
-var il = new ItemLibrary('items');
-il.updateItemList();
 
 

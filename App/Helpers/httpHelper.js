@@ -18,7 +18,8 @@ function get(url, onsuccess, onerror, secure = true) {
         //console.log("httpHelper.js: Status code: " + response.statusCode + " for url: " + url);
         //if status is not success raise error and exit
         if(response.statusCode != 200) {
-            onerror(response.statusCode + " " + response.statusMessage);
+            
+            onerror(Error(response.statusCode));
             return;
         }
         
