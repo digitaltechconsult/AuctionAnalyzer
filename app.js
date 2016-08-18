@@ -1,9 +1,9 @@
-const MongoDBHelper = require('./Helpers/mongoDBHelper');
-const AuctionHouseWebLoader = require('./AuctionHouse/AuctionHouseWebLoader');
-const Auctions = require('./AuctionHouse/auctions.js');
+const MongoDBHelper = require('./App/Helpers/mongoDBHelper');
+const AuctionHouseWebLoader = require('./App/AuctionHouse/AuctionHouseWebLoader');
+const Auctions = require('./App/AuctionHouse/auctions.js');
 const log = require('single-line-log').stdout;
 const sleep = require('sleep');
-const AppCommons = require('./Helpers/appCommons');
+const AppCommons = require('./App/Helpers/appCommons');
 
 var appCommons = new AppCommons();
 
