@@ -70,7 +70,7 @@ function insertAuctionsData(dbInstance, auctions, callback) {
         if (error !== null) {
             console.error("Cannot insert auctions.");
         } else {
-            console.info("Data inserted successfully into the database. ");
+            console.log("%d row(s) successfully into the database", auctions.length);
             callback();
         }
     });
