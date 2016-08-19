@@ -4,10 +4,10 @@ var AppSettings = {
     locale: "en-us",
     apikey:"stu29wmafremfy7t8726s8qbs6p32643",
     ahUrl: function() {
-        return "https://eu.api.battle.net/wow/auction/data/" + realm + "?locale=" + locale + "&apikey=" + key;
+        return "https://eu.api.battle.net/wow/auction/data/" + this.realm + "?locale=" + this.locale + "&apikey=" + this.apikey;
     },
     itemUrl: function(item) {
-        return "https://eu.api.battle.net/wow/item/" + item + "?locale=" + locale + "&apikey=" + key
+        return "https://eu.api.battle.net/wow/item/" + this.item + "?locale=" + this.locale + "&apikey=" + this.apikey;
     }
 }
 

@@ -18,23 +18,20 @@ function Auction() {
 
 function Auctions() {
     this.collection = [];
-    console.log("auctions.js: New Auctions object created");
 }
 
-Auctions.prototype.readBlizzardData = function (data) {
+Auctions.prototype.prepareData = function (data) {
     var $this = this;
-    console.log("auctions.js: Reading Blizzard data");
+    console.info("Reading Blizzard data");
 
-    var realms = data.data.realms;
-    var auctions = data.data.auctions;
+    var realms = data.realms;
+    var auctions = data.auctions;
 
     for(i=0;i<auctions.length;i++) {
-        var readProgress = "auctions.js: Reading progress: " + Math.round(100 * i/auctions.length) + "%\n";
-        log(readProgress);
         var row = auctions[i];
         
         var auction = new Auction();
-        auction.timestamp = data.data.timestamp;
+        auction.timestamp = data.timestamp;
         auction.id = row.auc;
         auction.item = row.item;
         auction.owner = row.owner;
@@ -49,6 +46,8 @@ Auctions.prototype.readBlizzardData = function (data) {
         auction.context = row.context;
 
         $this.collection.push(auction);
+        var readProgress = "auctions.js: Reading progress: " + Math.round(100 * i/auctions.length) + "%\n";
+        log(readProgress);
     }
 }
 
