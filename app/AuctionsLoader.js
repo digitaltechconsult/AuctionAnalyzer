@@ -85,25 +85,25 @@ AuctionsLoader.prototype.loadAuctions = function (callback) {
         getDataFiles(mongoClient, function (files) {
             readDataFiles(mongoClient, files, function (data) {
                 //if we don't have any data to process, just exit
-                if(data === false) {
-                    mongoClient.disconnect(function() {
+                if (data === false) {
+                    mongoClient.disconnect(function () {
                         console.warn("No new data found, process will disconnect from the database");
                     });
                     callback();
                 } else {
-                var auctions = new Auctions();
-                auctions.prepareData(data);
-                insertAuctionsData(mongoClient, auctions.collection, function () {
-                    console.info("Auctions imported successfully");
-                    mongoClient.disconnect(function(){
-                        console.info("Process disconnected from database.");
+                    var auctions = new Auctions();
+                    auctions.prepareData(data);
+                    insertAuctionsData(mongoClient, auctions.collection, function () {
+                        console.info("Auctions imported successfully");
+                        mongoClient.disconnect(function () {
+                            console.info("Process disconnected from database.");
+                        });
+                        callback();
                     });
-                    callback();
-                });
                 }
             });
         });
-    }, function () { }, function () { });
+    }, function () { });
 }
 
 module.exports = AuctionsLoader;

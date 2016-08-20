@@ -7,7 +7,11 @@ var AppSettings = {
         return "https://eu.api.battle.net/wow/auction/data/" + this.realm + "?locale=" + this.locale + "&apikey=" + this.apikey;
     },
     itemUrl: function(item) {
-        return "https://eu.api.battle.net/wow/item/" + this.item + "?locale=" + this.locale + "&apikey=" + this.apikey;
+        return "https://eu.api.battle.net/wow/item/" + item + "?locale=" + this.locale + "&apikey=" + this.apikey;
+    },
+
+    playerUrl: function(item) {
+        return 'not yet available';
     }
 }
 

@@ -8,7 +8,12 @@ function _main() {
     console.info("Data Loader Process started");
     var auctionLoader = new AuctionLoader();
     auctionLoader.loadAuctions(function(){
-        appCommons.makeRecursiveCall(_main);
+
+        console.info("Starting Item Loader script");
+        appCommons.runScript('./item_loader.js', function(err) {
+            console.info("Item Loader script finished");
+             appCommons.makeRecursiveCall(_main);
+        });
     });
 }
 
