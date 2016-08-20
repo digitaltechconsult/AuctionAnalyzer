@@ -17,6 +17,7 @@ function getDataFiles(dbInstance, callback) {
         callback(object.files);
     }, function (error) {
         console.warn("Error occured while connecting to %s, nothing to do here", AppSettings.ahUrl());
+        callback(false);
     }, function () {
         //we don't need to know what data chunks contain
     });
@@ -83,6 +84,12 @@ AuctionsLoader.prototype.loadAuctions = function (callback) {
     var mongoClient = new MongoDbHelper();
     mongoClient.connect(function () {
         getDataFiles(mongoClient, function (files) {
+            if(files === false) {
+                mongoClient.disconnect(function () {
+                        console.warn("Could not retrieve the file list from Blizzard");
+                    });
+                    callback();
+            } else {
             readDataFiles(mongoClient, files, function (data) {
                 //if we don't have any data to process, just exit
                 if (data === false) {
@@ -102,6 +109,7 @@ AuctionsLoader.prototype.loadAuctions = function (callback) {
                     });
                 }
             });
+            }
         });
     }, function () { });
 }
