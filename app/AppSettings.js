@@ -10,8 +10,8 @@ var AppSettings = {
         return "https://eu.api.battle.net/wow/item/" + item + "?locale=" + this.locale + "&apikey=" + this.apikey;
     },
 
-    playerUrl: function(item) {
-        return 'not yet available';
+    playerUrl: function(realm, character) {
+        return 'https://eu.api.battle.net/wow/character/' + realm + '/' + character + '?locale=' + this.locale + '&apikey=' + this.apikey;
     }
 }
 

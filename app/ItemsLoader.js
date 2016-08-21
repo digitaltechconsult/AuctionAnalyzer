@@ -38,8 +38,6 @@ ItemsLoader.prototype.loadItems = function (collectionName, onSuccess, onError) 
         console.error("ItemLoader cannot connecto to database");
         onError();
     });
-
-
 }
 
 ItemsLoader.prototype.generateUpdateList = function (onSuccess, onError) {
