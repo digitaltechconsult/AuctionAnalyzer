@@ -5,10 +5,10 @@ const AppSettings = require('./AppSettings');
 const MongoClient = require('../lib/MongoDbHelper');
 const Http = require('../lib/HttpHelper');
 
-function ItemsLoader(type) {
+function ItemsLoader() {
 
     //collections name
-    this.itemsCollectionName = type === 'items' ? 'item_library' : 'user_library';
+    this.itemsCollectionName = 'item_library';
     this.ahCollectionName = 'auctions_' + AppSettings.realm;
 }
 
