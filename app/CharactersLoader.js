@@ -28,7 +28,7 @@ CharactersLoader.prototype.loadAhCharacters = function (onSuccess, onError) {
             }
         }], function (error, results) { //results of the query
             if (error !== null) {
-                console.error("Error occured while querying the database, no data have been retrieved. The execution will stop.");
+                console.error("Error occured while querying the database, no data have been retrieved. The execution will stop." + error);
                 onError();
             } else {
                 console.log("Found %d characters in collection %s", results.length, collectionName);
