@@ -68,7 +68,7 @@ ItemsLoader.prototype.updateItem = function (item, collection, onSuccess, onErro
 
     console.info("Update information for item " + item);
     var http = new Http(true);
-    var url = collection === 'item_library' ? AppSettings.itemUrl(item) : AppSettings.playerUrl(item);
+    var url = AppSettings.itemUrl(item);
     http.get(url, httpSuccess, httpFail, function () { });
 
     function httpFail(err) {
