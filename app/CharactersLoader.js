@@ -167,7 +167,7 @@ CharactersLoader.prototype.updateCharactersList = function () {
         characters.forEach(function (character, index) {
             setTimeout(function () {
                 $this.updateCharacter(character._id, $this.charactersCollectionName, function () { }, function () { });
-            }, 550 * index);
+            }, 750 * index);
         });
     }, function () {
         console.warn("Character list was not updated");
