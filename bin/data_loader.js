@@ -12,11 +12,11 @@ function _main() {
         console.info("Starting Item Loader script");
         appCommons.runScript('./item_loader.js', function(err) {
             console.info("Item Loader script finished");
-            //console.info("Starting Char Loader script");
-            //appCommons.runScript('./char_loader.js', function(err) {
-            //    console.info("Char Loader script finished");
+            console.info("Starting Char Loader script");
+            appCommons.runScript('./char_loader.js', function(err) {
+               console.info("Char Loader script finished");
                 appCommons.makeRecursiveCall(_main);
-           // });
+           });
         });
     });
 }
