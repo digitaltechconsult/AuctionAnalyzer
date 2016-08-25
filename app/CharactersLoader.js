@@ -75,12 +75,50 @@ CharactersLoader.prototype.loadCharacters = function (onSuccess, onError) {
     });
 }
 
+CharactersLoader.prototype.notIn = function(collection, inCollection) {
+    var results = [];
+    for(var i=0; i<collection.length; i++) {
+        var found = false;
+
+        for(var j=0; j<inCollection.length; j++) {
+            found = (collection[i]._id.realm == inCollection[j]._id.realm && collection[i]._id.character == inCollection[j]._id.character);
+            if(found == true) {
+                break;
+            }
+        }
+
+        if(!found) {
+                results.push(collection[i]);
+        }
+        
+        //check if we already have all results so we don't iterate anymore
+        if(results.length == inCollection.length) {
+            for(k=i+1; k<collection.length; k++) {
+                results.push(collection[k]);
+            }
+            break;
+        }
+
+    }
+    return results;
+}
+
 CharactersLoader.prototype.generateUpdateList = function (onSuccess, onError) {
     var $this = this;
 
+    function ifExists(element, collection) {
+        var result = false;
+        collection.forEach(function (value) {
+            result = element["_id"]["character"] == value["_id"]["character"] && element["_id"]["realm"] == value["_id"]["realm"];
+        });
+        return result;
+    }
+
     $this.loadCharacters(function (characters) {
         $this.loadAhCharacters(function (ahCharacters) {
-            remainingCharacters = _(ahCharacters).difference(characters);
+
+            remainingCharacters = $this.notIn(ahCharacters, characters);
+            
             if (remainingCharacters.length > 0) {
                 console.log("Need to process %d characters", remainingCharacters.length);
                 onSuccess(remainingCharacters);
@@ -96,10 +134,10 @@ CharactersLoader.prototype.generateUpdateList = function (onSuccess, onError) {
     });
 }
 
-CharactersLoader.prototype.normalizeRealmName = function(realm) {
+CharactersLoader.prototype.normalizeRealmName = function(realm, separator = "-") {
     var string = realm.split(/(?=[A-Z])/);
     if(string.length > 1) {
-        console.log("Realm name normalized. Old name: %s; New name: %s",realm,string.join('-'));
+        console.log("Realm name normalized. Old name: %s; New name: %s",realm,string.join(separator));
         return string.join('-');
     }
     return realm;
@@ -114,7 +152,7 @@ CharactersLoader.prototype.updateCharacter = function (object, collection, onSuc
     http.get(url, httpSuccess, httpFail, function () { });
 
     function httpFail(err) {
-        console.warn(JSON.stringify(object));
+        console.warn("HTTP Error encountered for: " + JSON.stringify(object));
         //check blizzard errors
         if (err === 404) {
             var newObject = {
@@ -131,6 +169,7 @@ CharactersLoader.prototype.updateCharacter = function (object, collection, onSuc
     function httpSuccess(data) {
         var object = JSON.parse(data);
         console.info("Retrieved character " + object.name + "[" + object.realm + "]");
+        object.realm = object.realm.replace(' ',''); //remove white space from realm name to fit auctions
         $this.insertCharacterInDatabase(object, collection, onSuccess, onError);
     }
 }
