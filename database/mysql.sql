@@ -22,5 +22,6 @@ CREATE TABLE `items` (
   `item_id` int(10) NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT '',
   `icon` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
