@@ -19,6 +19,7 @@
   "dependencies": {
     "console-stripe": "^0.2.2-rc1",
     "mongodb": "^2.2.5",
+    "mysql": "^2.11.1",
     "promise": "^7.1.1",
     "single-line-log": "^1.1.1",
     "sleep": "^3.0.1",
