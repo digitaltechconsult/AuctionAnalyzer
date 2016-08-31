@@ -1,0 +1,12 @@
+timestamp
+id
+item
+owner
+ownerRealm
+bid
+buyout
+quantity
+timeleft
+rand
+seed
+context
