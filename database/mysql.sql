@@ -16,3 +16,11 @@ CREATE TABLE `auctions_Dentarg` (
   UNIQUE KEY `auction` (`timestamp`,`auction_id`),
   KEY `item` (`item`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `items` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `item_id` int(10) NOT NULL,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `icon` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -14,4 +14,5 @@ db.getCollection('auctions_Dentarg').find({timestamp: {$type:1}}).forEach(functi
     db.getCollection('auctions_Dentarg').save(row);
     });
     
-//mongoexport --db AuctionHouse --collection auctions_Dentarg --type=csv --fieldFile fields.txt --out ./auctions_Dentarg.csv
+//mongoexport --db AuctionHouse --collection auctions_Dentarg --type=csv --fieldFile auctions.txt --out ./auctions_Dentarg.csv
+//mongoexport --db AuctionHouse --collection item_library --type=csv --fieldFile items.txt --out ./wow_items.csv
