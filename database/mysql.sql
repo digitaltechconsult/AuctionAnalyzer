@@ -1,21 +1,22 @@
-CREATE TABLE `auctions_Dentarg` (
+CREATE TABLE `auctions_dentarg` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `timestamp` decimal(15,0) NOT NULL,
   `auction_id` int(10) NOT NULL,
   `item` int(5) NOT NULL,
   `owner` varchar(50) NOT NULL DEFAULT '',
   `ownerRealm` varchar(50) NOT NULL DEFAULT '',
-  `bid` int(10) unsigned zerofill NOT NULL,
-  `buyout` int(10) unsigned zerofill NOT NULL,
+  `bid` decimal(15,0) unsigned zerofill NOT NULL,
+  `buyout` decimal(15,0) unsigned zerofill NOT NULL,
   `quantity` int(10) unsigned zerofill NOT NULL,
   `timeleft` varchar(10) NOT NULL DEFAULT '',
   `rand` int(10) DEFAULT NULL,
-  `seed` int(10) DEFAULT NULL,
+  `seed` int(20) DEFAULT NULL,
   `context` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `auction` (`timestamp`,`auction_id`),
-  KEY `item` (`item`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  KEY `item` (`item`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `items` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
