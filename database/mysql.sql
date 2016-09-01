@@ -4,8 +4,8 @@ CREATE TABLE `auctions_dentarg` (
   `item` int(5) NOT NULL,
   `owner` varchar(50) NOT NULL DEFAULT '',
   `ownerRealm` varchar(50) NOT NULL DEFAULT '',
-  `bid` decimal(15,0) unsigned zerofill NOT NULL,
-  `buyout` decimal(15,0) unsigned zerofill NOT NULL,
+  `bid` decimal(20,2) unsigned zerofill NOT NULL,
+  `buyout` decimal(20,2) unsigned zerofill NOT NULL,
   `quantity` int(10) unsigned zerofill NOT NULL,
   `timeleft` varchar(10)  DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
