@@ -7,6 +7,4 @@ bid
 buyout
 quantity
 timeleft
-rand
-seed
-context
+
